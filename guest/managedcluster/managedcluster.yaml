@@ -1,6 +1,6 @@
 apiVersion: cluster.open-cluster-management.io/v1
 kind: ManagedCluster
 metadata:
-  name: hao-test
+  name: kind-managed-cluster
 spec:
   hubAcceptsClient: true
