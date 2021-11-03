@@ -19,7 +19,7 @@ spec:
       serviceAccountName: default
       containers:
       - name: managedcluster-import-controller
-        image: quay.io/haoliu/managedcluster-import-controller:latest
+        image: quay.io/haoliu/managedcluster-import-controller:hyper-acm-hack
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /var/run/secrets/hypershift

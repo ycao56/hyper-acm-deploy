@@ -79,6 +79,9 @@ pe "export KUBECONFIG=hub.kubeconfig"
 pe "oc apply -f host/registration -n hypershift-clusters-acm-1"
 pe "oc apply -f host/managedcluster-import-controller -n hypershift-clusters-acm-1"
 
+comment "[HACK] the managedcluster-import-controller code has been modified to disable leader election"
+echo "for more information https://github.com/TheRealHaoLiu/managedcluster-import-controller/commit/b7d9f54b99c242caeb1393cee6c315a031a9e2c8"
+
 comment "[HACK] create namespace on guest cluster to support leader election of registration controller"
 pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
 pe "oc create namespace hypershift-clusters-acm-1"
