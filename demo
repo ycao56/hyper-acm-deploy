@@ -37,16 +37,16 @@ echo "NOTE: the credential does expire"
 comment "cloneing hypershift repo"
 pe "git clone https://github.com/openshift/hypershift.git"
 
+comment "host cluster info"
+pe "oc config view --minify=true --raw=true > hub.kubeconfig"
+pe "export KUBECONFIG=$PWD/hub.kubeconfig"
+pe "oc cluster-info"
+
 comment "build and install hypershift"
 pe "pushd hypershift"
 pe "make build"
 pe "./bin/hypershift install"
-pe "popd hypershift"
-
-comment "host cluster info"
-pe "oc config view --minify=true --raw=true > hub.kubeconfig"
-pe "export KUBECONFIG=hub.kubeconfig"
-pe "oc cluster-info"
+pe "popd"
 
 comment "create the hypershift-clusters namespace"
 pe "oc create namespace hypershift-clusters"
