@@ -120,3 +120,13 @@ comment "wait for cluster to be Available"
 pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
 pe "oc get managedcluster"
 
+comment "HARD STUFF >.<"
+comment "1. getting any webhook to work in this setup will be difficult hypershift itself is not able to sort out how to support OCP webhooks"
+pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
+pe "oc get validatingwebhookconfigurations"
+pe "oc get mutatingwebhookconfigurations"
+comment "2. getting Hive will be hard since hive expect to create job on managed cluster"
+comment "3. getting Infrastructure Operator to work will be hard since it depends on the BareMetalOperator"
+comment "4. Observability?"
+comment "5. increase network complexity"
+
