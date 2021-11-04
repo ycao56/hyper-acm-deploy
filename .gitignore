@@ -2,3 +2,4 @@
 hypershift/
 import-crds.yaml
 import.yaml
+!host/hypershift
