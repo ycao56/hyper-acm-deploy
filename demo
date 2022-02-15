@@ -42,13 +42,18 @@ pe "oc config view --minify=true --raw=true > hub.kubeconfig"
 pe "export KUBECONFIG=$PWD/hub.kubeconfig"
 pe "oc cluster-info"
 
-comment "build and install hypershift"
+comment "build and install hypershift on the hypershift Namespace"
 pe "pushd hypershift"
 pe "make build"
 pe "./bin/hypershift install"
 pe "popd"
 
-comment "create the hypershift-clusters namespace"
+comment "need to replace the hypershift operator image to  quay.io/jpacker/hypershift:latest"
+comment "% oc edit deployments -n hypershift operator"
+comment "make sure the hypershift operator running"
+
+
+comment "create the hypershift-clusters namespace for creating the hostedCluster resource"
 pe "oc create namespace hypershift-clusters"
 
 comment "copy ocp global pull secret to hypershift-clusters namespace"
@@ -57,7 +62,7 @@ pe "oc get secret -n openshift-config pull-secret -o jsonpath={.data.\\\.dockerc
 pe "oc create secret docker-registry -n hypershift-clusters pull-secret --from-file=.dockerconfigjson=$pull_secret"
 rm -rf $pull_secret
 
-comment "create hyper-acm-1 HostedCluster"
+comment "create hyper-acm-1 HostedCluster on the hypershift-clusters namespace"
 cat host/hypershift/hypershift-controlplane.yaml
 pe "oc apply -f host/hypershift/hypershift-controlplane.yaml"
 
