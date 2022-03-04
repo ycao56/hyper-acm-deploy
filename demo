@@ -138,3 +138,36 @@ comment "3. getting Infrastructure Operator to work will be hard since it depend
 comment "4. Observability?"
 comment "5. increase network complexity"
 
+
+comment "deploy policy CRDs on hosted cluster "
+pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
+pe "kubectl apply -f https://raw.githubusercontent.com/open-cluster-management-io/api/main/cluster/v1beta1/0000_03_clusters.open-cluster-management.io_placementdecisions.crd.yaml"
+pe "kubectl apply -f https://raw.githubusercontent.com/stolostron/multicloud-operators-placementrule/main/deploy/crds/apps.open-cluster-management.io_placementrules_crd.yaml"
+pe "kubectl apply -f https://raw.githubusercontent.com/stolostron/governance-policy-propagator/main/deploy/crds/policy.open-cluster-management.io_placementbindings.yaml"
+pe "kubectl apply -f https://raw.githubusercontent.com/stolostron/governance-policy-propagator/main/deploy/crds/policy.open-cluster-management.io_policyautomations.yaml"
+pe "kubectl apply -f https://raw.githubusercontent.com/stolostron/governance-policy-propagator/main/deploy/crds/policy.open-cluster-management.io_policies.yaml"
+pe "kubectl apply -f https://raw.githubusercontent.com/stolostron/governance-policy-propagator/main/deploy/crds/policy.open-cluster-management.io_policysets.yaml"
+
+comment "deploy Application Operator hub component"
+pe "export KUBECONFIG=hub.kubeconfig"
+pe "oc apply -f deployApp/management/1-service_account.yaml -n hypershift-clusters-acm-1"
+pe "oc apply -f deployApp/management/8-application-operator.yaml -n hypershift-clusters-acm-1"
+
+comment "deploy policy hub component"
+pe "export KUBECONFIG=hub.kubeconfig"
+pe "oc apply -f deployPolicy/management/policy-propagator.yaml -n hypershift-clusters-acm-1"
+pe "oc apply -f deployPolicy/management/policy-addon-controller.yaml -n hypershift-clusters-acm-1"
+
+comment "deploy policy addon"
+pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
+pe "oc apply -f deployPolicy/hosted/policy-framework-addon.yaml -n kind-managed-cluster"
+pe "oc apply -f deployPolicy/hosted/config-policy-addon.yaml -n kind-managed-cluster"
+
+comment "check addons"
+pe "export KUBECONFIG=managed-cluster.kubeconfig"
+pe "oc get pods -n open-cluster-management-agent-addon"
+
+comment "Test a policy"
+pe "export KUBECONFIG=$kubeconfig_name.kubeconfig"
+pe "oc apply -f deployPolicy/test-policy.yaml -n default"
+pe "oc get policy -A"
